@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Eclipse RPG — 100 Dunia</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game">
+<canvas id="c"></canvas>
+<div class="hud"><div class="panel">
+  <div class="name" id="hudName">⚔️ FIGHTER • Lv. 1</div>
+  <div class="bar"><div id="hp" class="fill hp"></div></div>
+  <div class="bar" style="margin-top:4px"><div id="xp" class="fill xp"></div></div>
+  <div id="stats" class="stats">HP 100/100 • XP 0/100 • ATK 12</div>
+</div></div>
+<div id="quest">
+  <span id="stageProg">Stage 1 / 100</span><br>
+  <b id="stageName2">HUTAN AWAL</b><br>
+  <span id="diffTier" style="font-weight:900;color:#7dff9b">🌱 MUDAH</span><br>
+  <span id="kills">0 / 5</span><br>
+  <span id="goldText">💰 0 Gold</span> • <span id="potionText">🧪 0</span>
+</div>
+<div id="minimap"><canvas id="mini" width="118" height="88"></canvas></div>
+<button id="shopBtn" title="Buka Toko">🛒</button>
+<button id="pauseBtn" title="Pause">⏸</button>
+<div id="toast"></div>
+<div id="combo"></div>
+<div id="zone">HUTAN AWAL</div>
+<div id="hpBarLow"></div>
+<div class="buffIcons" id="buffIcons"></div>
+<div id="controls">
+  <div id="joy"><div id="stick"></div></div>
+  <div class="actions">
+    <button id="skillBtn" class="btn"><span class="ico">✨</span><span class="lbl">SKILL</span></button>
+    <button id="dashBtn" class="btn"><span class="ico">💨</span><span class="lbl">DASH</span></button>
+    <button id="ultBtn" class="btn"><span class="ico">🌟</span><span class="lbl">ULT</span></button>
+    <button id="attack" class="btn"><span class="ico">⚔️</span><span class="lbl">ATTACK</span></button>
+  </div>
+  <div class="hint">WASD • Space • Q • E • R • 🛒 Shop • ESC Pause</div>
+</div>
+<div id="start" class="screen active"><div class="box">
+  <div class="logo">🌿</div>
+  <h1>ECLIPSE RPG</h1>
+  <p class="sub">100 DUNIA · 400 MONSTER · 100 KARAKTER</p>
+  <button id="toContinue" class="btn-big gold" style="display:none">▶ LANJUTKAN</button>
+  <div id="saveInfo" style="display:none;font-size:10px;color:#9cb8a0;margin-top:6px;line-height:1.7"></div>
+  <button id="toChar" class="btn-big primary">▶ MULAI PETUALANGAN</button>
+  <button id="toHowto" class="btn-big ghost">📖 CARA BERMAIN</button>
+  <button id="toSettings" class="btn-big blue">⚙️ PENGATURAN</button>
+  <button id="toAbout" class="btn-big purple">ℹ️ TENTANG GAME</button>
+  <div id="howtoPanel" style="display:none;margin-top:14px;padding:14px;text-align:left;background:rgba(0,0,0,.3);border-radius:12px;font-size:12px;color:#b9c6b9;line-height:1.65">
+    <b style="color:#a9f3b0">🎮 KONTROL</b><br>
+    • WASD / Joystick = gerak • Space = serangan<br>
+    • Q=Skill • E=Dash • R=Ultimate • ESC = Pause<br>
+    • Klik 🧪 = potion • Klik 🛒 = toko
+    <br><br><b style="color:#ffd36a">💰 PROGRESS = GOLD</b><br>
+    Belanjakan gold di <b>🛒 Toko</b> untuk upgrade permanen!
+    <br><br><b style="color:#a9f3b0">🌍 100 STAGE</b><br>
+    Kalahkan boss → portal terbuka → masuk portal → stage berikutnya.
+  </div>
+</div></div>
+<div id="charSel" class="screen"><div class="box">
+  <p class="screenH">PILIH PAHLAWAN · <span id="charCount" style="color:#ffd36a">100</span> KARAKTER</p>
+  <div id="charTabs">
+    <button data-cat="all" class="active">🌟 SEMUA</button>
+    <button data-cat="melee">⚔️ MELEE</button>
+    <button data-cat="magic">🔮 MAGIC</button>
+    <button data-cat="ranged">🏹 RANGED</button>
+    <button data-cat="special">✨ SPECIAL</button>
+    <button data-cat="summoner">🐉 SUMMONER</button>
+    <button data-cat="hybrid">💫 HYBRID</button>
+  </div>
+  <div class="cards" id="charCards"></div>
+  <div id="charInfo"></div>
+  <div class="startHint">💡 Pilih karakter untuk melihat cara bermain dan fungsi setiap skill.</div>
+  <button id="charNext" class="btn-big primary">⚔️ MULAI STAGE 1</button>
+  <button id="charBack" class="btn-big ghost">← KEMBALI</button>
+</div></div>
+<div id="settingsScreen" class="screen"><div class="box">
+  <p class="screenH" style="color:#80baff">⚙️ PENGATURAN</p>
+  <div class="settingsGroup">
+    <div class="groupLabel">🎮 GAMEPLAY</div>
+    <div class="settingRow"><div class="settingInfo"><div class="settingIcon">🎬</div><div><div class="settingLabel">Screen Shake</div><div class="settingDesc">Efek getar</div></div></div><div class="segmented" data-setting="shake"><button data-value="0">Off</button><button data-value="0.5">Rendah</button><button data-value="1">Normal</button></div></div>
+    <div class="settingRow"><div class="settingInfo"><div class="settingIcon">💥</div><div><div class="settingLabel">Angka Damage</div></div></div><div class="segmented" data-setting="showDamage"><button data-value="false">Off</button><button data-value="true">On</button></div></div>
+    <div class="settingRow"><div class="settingInfo"><div class="settingIcon">🎯</div><div><div class="settingLabel">Garis Bidik</div></div></div><div class="segmented" data-setting="showAimLine"><button data-value="false">Off</button><button data-value="true">On</button></div></div>
+    <div class="settingRow"><div class="settingInfo"><div class="settingIcon">✨</div><div><div class="settingLabel">Partikel</div></div></div><div class="segmented" data-setting="particles"><button data-value="0.4">Rendah</button><button data-value="1">Normal</button><button data-value="1.6">Tinggi</button></div></div>
+    <div class="settingRow"><div class="settingInfo"><div class="settingIcon">⚔️</div><div><div class="settingLabel">Kesulitan</div></div></div><div class="segmented" data-setting="difficulty"><button data-value="0.75">Mudah</button><button data-value="1">Normal</button><button data-value="1.35">Sulit</button></div></div>
+  </div>
+  <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);text-align:center">
+    <button id="resetSettings" class="btn-big ghost" style="margin-top:0">🔄 Reset</button>
+    <button id="settingsBack" class="btn-big primary">✓ SELESAI</button>
+  </div>
+</div></div>
+<div id="aboutScreen" class="screen"><div class="box" style="text-align:center">
+  <div style="font-size:54px;line-height:1">🌿</div>
+  <h1 style="margin-top:6px">ECLIPSE RPG</h1>
+  <p class="sub" style="color:#c8a0ff;letter-spacing:5px">100 DUNIA · 400 MONSTER</p>
+  <div class="aboutBadge">VERSI 20.0 — ARCHETYPE PIXEL</div>
+  <div class="aboutStats">
+    <div class="aboutStat"><div class="num">100</div><div class="lbl">Karakter</div></div>
+    <div class="aboutStat"><div class="num">100</div><div class="lbl">Stage</div></div>
+    <div class="aboutStat"><div class="num">400</div><div class="lbl">Monster</div></div>
+    <div class="aboutStat"><div class="num">3</div><div class="lbl">Fase Boss</div></div>
+    <div class="aboutStat"><div class="num">40+</div><div class="lbl">Boss Skill</div></div>
+    <div class="aboutStat"><div class="num">∞</div><div class="lbl">Kombinasi</div></div>
+  </div>
+  <div class="aboutText">Setiap karakter dirender dengan <b>archetype pixel art</b> sesuai wujudnya — robot, hewan, penunggang, manusia, dsb.</div>
+  <div class="creditsRow">
+    <div class="line"><b>🎨 ART & CODE</b> — Tim Eclipse</div>
+    <div class="line">Dibuat dengan <span class="heart">❤️</span></div>
+  </div>
+  <button id="aboutBack" class="btn-big primary" style="margin-top:14px">← KEMBALI</button>
+</div></div>
+<div id="shopScreen" class="screen"><div class="box">
+  <div class="shopHeader"><div class="title">🛒 TOKO</div><div class="gold">💰 <span id="shopGold">0</span></div></div>
+  <div class="shopGrid" id="shopGrid"></div>
+  <div class="shopFooter">
+    <button id="shopClose" class="btn-big gold">✓ TUTUP</button>
+    <button id="shopNext" class="btn-big primary" style="display:none">▶ LANJUT</button>
+  </div>
+</div></div>
+<div id="pauseScreen" class="screen"><div class="box" style="text-align:center">
+  <p class="screenH" style="color:#80baff">⏸ PAUSE</p>
+  <button id="pauseResume" class="btn-big primary">▶ LANJUT</button>
+  <button id="pauseRestart" class="btn-big gold">🔄 ULANGI STAGE</button>
+  <button id="pauseSettings" class="btn-big blue">⚙️ PENGATURAN</button>
+  <button id="pauseMenu" class="btn-big ghost">🏠 MENU UTAMA</button>
+</div></div>
+<div id="stageIntro" class="screen"><div class="stageIntroBox">
+  <div class="stageNum" id="siNum">STAGE 1 / 100</div>
+  <div class="stageName" id="siName">HUTAN AWAL</div>
+  <div id="siTier" style="font-size:13px;font-weight:900;letter-spacing:4px;margin-top:10px;color:#7dff9b">🌱 MUDAH</div>
+  <div class="desc" id="siDesc"></div>
+</div></div>
+<div id="death" class="screen"><div class="box">
+  <div style="font-size:42px">💀</div>
+  <h2 style="margin:8px 0">Kamu Tumbang</h2>
+  <p style="color:#b9c6b9;font-size:13px">Coba ubah strategi, atau pilih karakter lain.</p>
+  <button id="retryStage" class="btn-big primary">🔄 COBA STAGE INI</button>
+  <button id="toMenu" class="btn-big ghost">🏠 MENU UTAMA</button>
+</div></div>
+<div id="win" class="screen"><div class="winBox">
+  <div style="font-size:52px">👑</div>
+  <h1>VICTORY</h1>
+  <p class="sub" style="color:#ffd36a">KAMU MENAKLUKKAN 100 DUNIA!</p>
+  <p style="color:#e8d8a0;font-size:13px;line-height:1.6">Dari Hutan Awal sampai Kehancuran Dunia.<br>Kau telah menjadi legenda.</p>
+  <button id="playAgain" class="btn-big primary" style="background:linear-gradient(180deg,#ffd97a,#e0a020);color:#241600">🔄 MAIN LAGI</button>
+</div></div>
+</div>
+
+<script src="js/atlas.js"></script>
+<script src="js/data.js"></script>
+<script src="js/boss.js"></script>
+<script src="js/bestiary.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
